@@ -48,3 +48,10 @@ if [ $? -eq 0 ]; then
     --profile awsbootstrap \
     --query "Exports[?starts_with(Name,'InstanceEndpoint')].Value"
 fi
+
+# If the deploy succeeded, show the DNS name of the created instance
+if [ $? -eq 0 ]; then
+  aws cloudformation list-exports \
+    --profile awsbootstrap \
+    --query "Exports[?ends_with(Name,'LBEndpoint')].Value" 
+fi
