@@ -78,7 +78,7 @@ Resources:
     Properties:
       DeploymentGroupName: staging
       AutoScalingGroups:
-        - !GetAtt Staging.Outputs.ScalingGroup
+      - !GetAtt Staging.Outputs.ScalingGroup
       ApplicationName: !Ref DeploymentApplication
       DeploymentConfigName: CodeDeployDefault.AllAtOnce 
       ServiceRoleArn: !GetAtt DeploymentRole.Arn
@@ -160,4 +160,4 @@ Outputs:
     Description: The DNS name for the staging LB
     Value: !GetAtt Staging.Outputs.LBEndpoint
     Export:
-      Name: LBEndpointsqqffqcwws
+      Name: LBEndpoint
