@@ -1,1 +1,4 @@
 node_modules
+cfn_output/
+curl_in_loop.sh
+

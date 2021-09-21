@@ -23,6 +23,7 @@ Parameters:
     NoEcho: true
     Description: 'A GitHub personal access token with "repo" and "admin:repo_hook" permissions.'
 
+
 Resources:
 
   DeploymentRole:
@@ -40,9 +41,6 @@ Resources:
           Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/PowerUserAccess
-      Tags:
-        - Key: Name
-          Value: !Ref AWS::StackName
 
   BuildProject:
     Type: AWS::CodeBuild::Project
@@ -64,22 +62,13 @@ Resources:
       ApplicationName: !Ref AWS::StackName
       ComputePlatform: Server
 
-  Staging:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: stage.yml
-      TimeoutInMinutes: 30
-      Parameters:
-        EC2InstanceType: !Ref EC2InstanceType
-        EC2AMI: !Ref EC2AMI
-
   StagingDeploymentGroup:
     Type: AWS::CodeDeploy::DeploymentGroup
     Properties:
       DeploymentGroupName: staging
       AutoScalingGroups:
       - !GetAtt Staging.Outputs.ScalingGroup
-      ApplicationName: !Ref DeploymentApplication
+      ApplicationName: !Ref DeploymentApplication 
       DeploymentConfigName: CodeDeployDefault.AllAtOnce 
       ServiceRoleArn: !GetAtt DeploymentRole.Arn
 
@@ -93,7 +82,7 @@ Resources:
       RoleArn: !GetAtt DeploymentRole.Arn
       Stages:
         - Name: Source
-          Actions: 
+          Actions:
             - Name: Source
               ActionTypeId:
                 Category: Source
@@ -138,7 +127,7 @@ Resources:
                 ApplicationName: !Ref DeploymentApplication
                 DeploymentGroupName: !Ref StagingDeploymentGroup
               RunOrder: 1
-  
+
   PipelineWebhook:
     Type: AWS::CodePipeline::Webhook
     Properties:
@@ -154,10 +143,19 @@ Resources:
       TargetPipelineVersion: !GetAtt Pipeline.Version
       RegisterWithThirdParty: true
 
+  Staging:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: stage.yml
+      TimeoutInMinutes: 30 
+      Parameters:
+        EC2InstanceType: !Ref EC2InstanceType 
+        EC2AMI: !Ref EC2AMI
+
 Outputs:
-  
+
   StagingLBEndpoint:
-    Description: The DNS name for the staging LB
-    Value: !GetAtt Staging.Outputs.LBEndpoint
+    Description: The DNS name for the staging LB 
+    Value: !GetAtt Staging.Outputs.LBEndpoint 
     Export:
-      Name: LBEndpoint
+      Name: StagingLBEndpoint
