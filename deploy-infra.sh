@@ -4,6 +4,7 @@ STACK_NAME=awsbootstrap
 REGION=eu-central-1
 CLI_PROFILE=awsbootstrap
 EC2_INSTANCE_TYPE=t2.micro 
+DOMAIN=bartkorn-awscloud.com
 
 GH_ACCESS_TOKEN=$(cat ~/.github/aws-bootstrap-access-token)
 GH_OWNER=$(cat ~/.github/aws-bootstrap-owner)
@@ -65,6 +66,7 @@ aws cloudformation deploy \
     GitHubBranch=$GH_BRANCH \
     GitHubPersonalAccessToken=$GH_ACCESS_TOKEN \
     CodePipelineBucket=$CODEPIPELINE_BUCKET \
+    Domain=$DOMAIN \
     EC2AMI="/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
 
 
